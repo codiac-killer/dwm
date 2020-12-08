@@ -43,6 +43,7 @@ static const Rule rules[] = {
 	{ "Gimp",     		NULL,       NULL,       1 << 2,       1,           -1 },
 	{ "Firefox",  		NULL,       NULL,       1 << 0,       0,           -1 },
 	{ "Brave-browser",	NULL,       NULL,       1 << 0,       0,           -1 },
+	{ "Opera",			NULL,       NULL,       1 << 0,       0,           -1 },
 	{ "subl",  			NULL,       NULL,       1 << 1,       0,           -1 },
 };
 
@@ -74,7 +75,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] 			= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  			= { "alacritty", NULL };
 static const char *fmcmd[]  			= { "thunar", NULL };
-static const char *browsercmd[]  		= { "brave", NULL };
+static const char *browsercmd[]  		= { "exo-open", "--launch", "WebBrowser", NULL};
 static const char *raise_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL };
 static const char *lower_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL };
 static const char *mute_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "toggle", NULL };
