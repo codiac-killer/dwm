@@ -20,6 +20,7 @@
  *
  * To understand everything else, start reading main().
  */
+#include <assert.h>
 #include <errno.h>
 #include <locale.h>
 #include <signal.h>
@@ -77,7 +78,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel, SchemeHid }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeHid, SchemeTagText, SchemeTagUline, SchemeCliUline, SchemeStatUline }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
@@ -834,6 +835,8 @@ drawbar(Monitor *m)
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
+    int tx = 0;
+    char *status_elements, *name_to_free, *name;
 	Client *c;
 
 	if(showsystray && m == systraytomon(m))
@@ -842,8 +845,39 @@ drawbar(Monitor *m)
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
 		drw_setscheme(drw, scheme[SchemeNorm]);
-		sw = TEXTW(stext) - lrpad / 2 + 2; /* 2px right padding */
-		drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2 - 2, stext, 0);
+		// sw = TEXTW(stext) - lrpad / 2 + 2; /* 2px right padding */
+		// drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2 - 2, stext, 0);
+
+		int i = 0;
+		// Copy the root name so we can manipulate it
+		name_to_free = name = strdup(stext);
+		// Count ';' occurancies
+		for (i=0; name[i]; name[i]==';' ? i++ : *name++);
+		// Make a string of i*';'
+		char *hidden_characters = malloc(i+1);
+		hidden_characters[i] = '\0';
+		while(i) {
+			i--;
+			hidden_characters[i] = ';';
+		}
+		// Deduct the width of hidden characters from status bar width
+		sw = TEXTW(stext) - TEXTW(hidden_characters);
+		// Reset name
+		name = name_to_free;
+		// Iterate thorugh the list of elements and print the status bar
+		while ((status_elements = strsep(&name, ";")))	{
+			// Draw text
+			drw_setscheme(drw, scheme[SchemeNorm]);
+			drw_text(drw, m->ww - sw + tx - stw, 0, TEXTW(status_elements) - lrpad, bh, 0, status_elements, 0);
+			// Underline
+			if(i++%2) {
+				drw_setscheme(drw, scheme[SchemeStatUline]);
+				drw_rect(drw, m->ww - sw + tx - stw+3, bh-uline_thickness, TEXTW(status_elements) - lrpad - 6, bh, 1, 1);
+			}
+			// x of at the end of current element
+			tx += TEXTW(status_elements) - lrpad;
+        }
+		free(name_to_free);
 	}
 
 	resizebarwin(m);
@@ -857,12 +891,31 @@ drawbar(Monitor *m)
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
 		w = TEXTW(tags[i]);
+		// drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
+		// drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+
+		// My style ===============================================================================
+		// Draw text and backgorund ---------------------------------------------------------------
+		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeTagText : SchemeNorm]);
+		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], 0);  // tag text + gray selection background
+		// ----------------------------------------------------------------------------------------
+		// underline bar --------------------------------------------------------------------------
+		if (m->tagset[m->seltags] & 1 << i) {
+			drw_setscheme(drw, scheme[SchemeTagUline]);
+			drw_rect(drw, x+3, bh-uline_thickness, w-6, bh, 1, !(urg & 1 << i));
+		}
+		// ----------------------------------------------------------------------------------------
+		// Reset color Scheme ---------------------------------------------------------------------
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
-		if (occ & 1 << i)
+		// ----------------------------------------------------------------------------------------
+		// ========================================================================================
+		
+		if (occ & 1 << i && !(m->tagset[m->seltags] & 1 << i))
 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
-				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-				urg & 1 << i);
+				// m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+				// urg & 1 << i);
+				0, 0);
+
 		x += w;
 	}
 	w = blw = TEXTW(m->ltsymbol);
@@ -891,10 +944,19 @@ drawbar(Monitor *m)
 					remainder--;
 				}
 				drw_text(drw, x, 0, tabw, bh, lrpad / 2, c->name, 0);
+
+				// underline bar for cilents --------------------------------------------------------------
+				if (m->sel == c) {
+					drw_setscheme(drw, scheme[SchemeCliUline]);
+					drw_rect(drw, x+3, bh-uline_thickness, tabw-6, bh, 1, !(urg & 1 << i));
+				}
+				// ----------------------------------------------------------------------------------------
+				// ========================================================================================
+
 				x += tabw;
 			}
 		} else {
-			drw_setscheme(drw, scheme[SchemeNorm]);
+			drw_setscheme(drw, scheme[SchemeNorm]);  // color was scheme[SchemeNorm]
 			drw_rect(drw, x, 0, w, bh, 1, 1);
 		}
 	}

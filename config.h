@@ -5,34 +5,47 @@
 // #############################################################################
 
 /* appearance */
-static const unsigned int borderpx  = 3;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const int CORNER_RADIUS 		= 3;		/* radius for rounded corners on clients */
 static const unsigned int gappx     = 18;       /* gap pixel between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
-static const int showsystray        = 1;     /* 0 means no systray */
+static const int showsystray        = 1;     	/* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int user_bh            = 35;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
-static const char *fonts[]          = { "Cantarell:style=Regular:size=10" };
+static const int user_bh            = 35;       /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int uline_thickness	= 3;		// thickness of underline of selected tag(s)
+static const char *fonts[]          = { "Cantarell:style=Regular:size=10", "JoyPixels:pixelsize=12:antialias=true:autohint=true" };
 static const char dmenufont[]       = "Cantarell:style=Regular:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+static const char col_nord_white[]	= "#ECEFF4";
+static const char col_nord_gray[]	= "#2E3440";
 static const char col_nord_red[]	= "#BF616A";
+static const char col_nord_green[]	= "#8FBCBB";
+static const char col_nord_blue[]	= "#5e81ac";
 static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
-	[SchemeHid]  = { col_cyan,  col_gray1, col_cyan  },
+	/*               		fg     		bg         border */
+//	[SchemeNorm]      = { col_gray3, col_gray1, col_gray2 },
+// 	[SchemeSel]       = { col_gray4, col_cyan,  col_cyan  },
+// 	[SchemeHid]       = { col_cyan,  col_gray1, col_cyan  },
+	[SchemeNorm]      = { col_nord_white, col_nord_gray, col_gray2 },
+	[SchemeSel]       = { col_nord_white, "#4E5460", col_cyan },
+	[SchemeHid]       = { col_nord_blue, col_nord_gray, col_nord_blue },
+	[SchemeTagText]   = { col_nord_green, "#4E5460", col_cyan },
+	[SchemeTagUline]  = { col_nord_gray, col_nord_green, col_cyan },
+	[SchemeCliUline]  = { col_nord_gray, col_nord_blue, col_cyan },
+	[SchemeStatUline] = { col_nord_gray, col_nord_red, col_cyan }
 };
 
 /* tagging */
 static const char *tags[] = { "Web", "Code", "Media", "Desktops", "System" };
+// static const char *tags[] = { "🌍", "📜", "⏯️", "📦", "⚙" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -43,8 +56,8 @@ static const Rule rules[] = {
 	{ "Gimp",     		NULL,       NULL,       1 << 2,       1,           -1 },
 	{ "Firefox",  		NULL,       NULL,       1 << 0,       0,           -1 },
 	{ "Brave-browser",	NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "Opera",			NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "subl",  			NULL,       NULL,       1 << 1,       0,           -1 },
+	{ "Opera",		NULL,       NULL,       1 << 0,       0,           -1 },
+	{ "subl",  		NULL, 	    NULL,       1 << 1,       0,           -1 },
 };
 
 /* layout(s) */
@@ -72,21 +85,23 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] 			= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] 			= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nord_gray, "-nf", col_nord_white, "-sb", col_nord_green, "-sf", col_nord_gray, NULL };
+static const char *roficmd[] 			= { "rofi", "-show", "drun", "-modi", "drun", "-theme", "oneDark", NULL };
 static const char *termcmd[]  			= { "alacritty", NULL };
-static const char *fmcmd[]  			= { "thunar", NULL };
+static const char *fmcmd[]  			= { "exo-open", "--launch", "FileManager", NULL };
 static const char *browsercmd[]  		= { "exo-open", "--launch", "WebBrowser", NULL};
-static const char *raise_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL };
-static const char *lower_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL };
-static const char *mute_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "toggle", NULL };
-static const char *media_playcmd[]  	= { "playerctl", "play-pause", NULL };
-static const char *media_stopcmd[]  	= { "playerctl", "stop", NULL };
-static const char *media_nextcmd[]  	= { "playerctl", "next", NULL };
-static const char *media_prevcmd[]  	= { "playerctl", "previous", NULL };
+// static const char *raise_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "5%+;", "kill", "-44", "$(pidof", "dwmblocks)", NULL };
+// static const char *lower_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "5%-;", "kill", "-44", "$(pidof", "dwmblocks)", NULL };
+// static const char *mute_volumecmd[]  	= { "amixer", "-D", "pulse", "sset", "Master", "toggle;", "kill", "-44", "$(pidof", "dwmblocks)", NULL };
+// static const char *media_playcmd[]  	= { "playerctl", "play-pause", NULL };
+// static const char *media_stopcmd[]  	= { "playerctl", "stop", NULL };
+// static const char *media_nextcmd[]  	= { "playerctl", "next", NULL };
+// static const char *media_prevcmd[]  	= { "playerctl", "previous", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      					spawn,          {.v = dmenucmd } },
+	{ MODKEY|ControlMask,           XK_Escape,      			spawn,          {.v = roficmd } },
 	{ MODKEY,             			XK_Return, 					spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_e,      					spawn,          {.v = fmcmd } },
 	{ MODKEY,                       XK_b,      					spawn,          {.v = browsercmd } },
@@ -121,13 +136,16 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      	7)
 	TAGKEYS(                        XK_9,                      	8)
 	{ MODKEY|ShiftMask,             XK_q,      					quit,           {0} },
-	{ 0,                       		XF86XK_AudioRaiseVolume,	spawn,          {.v = raise_volumecmd } },
-	{ 0,                       		XF86XK_AudioLowerVolume,	spawn,          {.v = lower_volumecmd } },
-	{ 0,                       		XF86XK_AudioMute,			spawn,          {.v = mute_volumecmd } },
-	{ 0,                       		XF86XK_AudioPlay,      		spawn,          {.v = media_playcmd } },
-	{ 0,                       		XF86XK_AudioStop,      		spawn,          {.v = media_stopcmd } },
-	{ 0,                       		XF86XK_AudioPrev,      		spawn,          {.v = media_nextcmd } },
-	{ 0,                       		XF86XK_AudioNext,      		spawn,          {.v = media_prevcmd } },
+	{ 0,                       		XF86XK_AudioRaiseVolume,	spawn,          SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)") },
+	{ 0,                       		XF86XK_AudioLowerVolume,	spawn,          SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)") },
+	{ 0,                       		XF86XK_AudioMute,			spawn,          SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
+	{ 0,                       		XF86XK_AudioPlay,      		spawn,          SHCMD("playerctl play-pause") },
+	{ 0,                       		XF86XK_AudioStop,      		spawn,          SHCMD("playerctl stop") },
+	{ 0,                       		XF86XK_AudioPrev,      		spawn,          SHCMD("playerctl next") },
+	{ 0,                       		XF86XK_AudioNext,      		spawn,          SHCMD("playerctl previous") },
+	// Print Screen Button:
+	{ 0,							XK_Print,					spawn,			SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
+	{ ShiftMask,					XK_Print,					spawn,			SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
 };
 
 /* button definitions */
