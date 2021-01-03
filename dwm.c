@@ -867,7 +867,7 @@ drawbar(Monitor *m)
 		// Iterate thorugh the list of elements and print the status bar
 		while ((status_elements = strsep(&name, ";")))	{
 			// Draw text
-			drw_setscheme(drw, scheme[SchemeNorm]);
+			drw_setscheme(drw, scheme[i%2 ? SchemeSel : SchemeNorm]);
 			drw_text(drw, m->ww - sw + tx - stw, 0, TEXTW(status_elements) - lrpad, bh, 0, status_elements, 0);
 			// Underline
 			if(i++%2) {

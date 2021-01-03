@@ -11,8 +11,9 @@ run /usr/bin/picom --config  ~/.config/picom.conf -b --experimental-backends
 run setxkbmap -layout "us,gr" -option "grp:win_space_toggle"
 run lxqt-policykit-agent
 # run xautolock -detectsleep -time 10 -locker "~/.config/awesome/lockscreen"
-run msm_notifier
+# run msm_notifier
 # run nm-applet
+run dunst
 run light-locker
 run xcape -e 'Super_L=Super_L|Control_L|Escape'
 # run thunar --daemon

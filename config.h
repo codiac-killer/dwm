@@ -101,25 +101,25 @@ static const char *browsercmd[]  		= { "exo-open", "--launch", "WebBrowser", NUL
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      					spawn,          {.v = dmenucmd } },
-	{ MODKEY|ControlMask,           XK_Escape,      			spawn,          {.v = roficmd } },
-	{ MODKEY,             			XK_Return, 					spawn,          {.v = termcmd } },
+	{ MODKEY|ControlMask,           XK_Escape,      		    spawn,          {.v = roficmd } },
+	{ MODKEY,             			    XK_Return, 				spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_e,      					spawn,          {.v = fmcmd } },
 	{ MODKEY,                       XK_b,      					spawn,          {.v = browsercmd } },
 	{ MODKEY|ShiftMask,             XK_b,      					togglebar,      {0} },
 	{ MODKEY,                       XK_j,      					focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      					focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      					incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      					incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      					setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      					setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_Up,      				incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_Down,      				incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_Left,      				setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_Right,  					setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_Return, 					zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    					view,           {0} },
-	{ MODKEY,             			XK_x,      					killclient,     {0} },
+	{ MODKEY,             			    XK_x,      					killclient,     {0} },
 	// { MODKEY,                       XK_t,      					setlayout,      {.v = &layouts[0]} },
 	// { MODKEY,                       XK_f,      					setlayout,      {.v = &layouts[1]} },
 	// { MODKEY,                       XK_m,      					setlayout,      {.v = &layouts[2]} },
 	// { MODKEY,                       XK_space,  					setlayout,      {0} },
-	{ MODKEY,             			XK_f,  						togglefloating, {0} },
+	{ MODKEY,             			    XK_f,  						  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      					view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      					tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  					focusmon,       {.i = -1 } },
@@ -136,16 +136,19 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      	7)
 	TAGKEYS(                        XK_9,                      	8)
 	{ MODKEY|ShiftMask,             XK_q,      					quit,           {0} },
-	{ 0,                       		XF86XK_AudioRaiseVolume,	spawn,          SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)") },
-	{ 0,                       		XF86XK_AudioLowerVolume,	spawn,          SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)") },
-	{ 0,                       		XF86XK_AudioMute,			spawn,          SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
-	{ 0,                       		XF86XK_AudioPlay,      		spawn,          SHCMD("playerctl play-pause") },
-	{ 0,                       		XF86XK_AudioStop,      		spawn,          SHCMD("playerctl stop") },
-	{ 0,                       		XF86XK_AudioPrev,      		spawn,          SHCMD("playerctl next") },
-	{ 0,                       		XF86XK_AudioNext,      		spawn,          SHCMD("playerctl previous") },
+  // Media Keys
+	{ 0,                       		  XF86XK_AudioRaiseVolume,	spawn,          SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)") },
+	{ 0,                       		  XF86XK_AudioLowerVolume,	spawn,          SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)") },
+	{ 0,                       		  XF86XK_AudioMute,			    spawn,          SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
+	{ 0,                       		  XF86XK_AudioPlay,      		spawn,          SHCMD("playerctl play-pause") },
+	{ 0,                       		  XF86XK_AudioStop,      		spawn,          SHCMD("playerctl stop") },
+	{ 0,                       		  XF86XK_AudioPrev,      		spawn,          SHCMD("playerctl next") },
+	{ 0,                       		  XF86XK_AudioNext,      		spawn,          SHCMD("playerctl previous") },
 	// Print Screen Button:
-	{ 0,							XK_Print,					spawn,			SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
-	{ ShiftMask,					XK_Print,					spawn,			SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
+	{ 0,							              XK_Print,					        spawn,			    SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
+	{ ShiftMask,					          XK_Print,					        spawn,			    SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
+  // Lockscreen on command 
+	{ MODKEY,                       XK_l,      					      spawn,          SHCMD("light-locker-command -l") },
 };
 
 /* button definitions */
