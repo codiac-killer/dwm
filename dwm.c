@@ -78,7 +78,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel, SchemeHid, SchemeTagText, SchemeTagUline, SchemeCliUline, SchemeStatUline }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeHid, SchemeTagText, SchemeTagUline, SchemeCliUline, SchemeStatus }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
@@ -313,7 +313,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 static Atom wmatom[WMLast], netatom[NetLast], xatom[XLast];
 static int running = 1;
 static Cur *cursor[CurLast];
-static Clr **scheme;
+static Clr **scheme, **rgb_scheme;
 static Display *dpy;
 static Drw *drw;
 static Monitor *mons, *selmon;
@@ -321,7 +321,7 @@ static Window root, wmcheckwin;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
-
+static int num_rgb_colors = LENGTH(rgb_colors);
 /* compile-time check if all tags fit into an unsigned int bit array. */
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
@@ -569,6 +569,8 @@ cleanup(void)
 		drw_cur_free(drw, cursor[i]);
 	for (i = 0; i < LENGTH(colors); i++)
 		free(scheme[i]);
+	for (i = 0; i < LENGTH(rgb_colors); i++)
+		free(rgb_scheme[i]);
 	XDestroyWindow(dpy, wmcheckwin);
 	drw_free(drw);
 	XSync(dpy, False);
@@ -828,6 +830,9 @@ dirtomon(int dir)
 	return m;
 }
 
+// Global for transient effect
+int timer = 0;
+
 void
 drawbar(Monitor *m)
 {
@@ -866,18 +871,23 @@ drawbar(Monitor *m)
 		name = name_to_free;
 		// Iterate thorugh the list of elements and print the status bar
 		while ((status_elements = strsep(&name, ";")))	{
+			// Draw background
+			// drw_setscheme(drw, scheme[SchemeNorm]);
+			// drw_rect(drw, m->ww - sw + tx - stw, 0, TEXTW(status_elements) - lrpad, bh, 1, 1);
 			// Draw text
-			drw_setscheme(drw, scheme[i%2 ? SchemeSel : SchemeNorm]);
+			// drw_setscheme(drw, scheme[i++%2 ? SchemeNorm : SchemeStatus]);
+			drw_setscheme(drw, rgb_scheme[i++%num_rgb_colors]);
 			drw_text(drw, m->ww - sw + tx - stw, 0, TEXTW(status_elements) - lrpad, bh, 0, status_elements, 0);
 			// Underline
-			if(i++%2) {
-				drw_setscheme(drw, scheme[SchemeStatUline]);
-				drw_rect(drw, m->ww - sw + tx - stw+3, bh-uline_thickness, TEXTW(status_elements) - lrpad - 6, bh, 1, 1);
-			}
+			// if(i++%2) {
+			//	drw_setscheme(drw, scheme[SchemeStatUline]);
+			//	drw_rect(drw, m->ww - sw + tx - stw+3, bh-uline_thickness, TEXTW(status_elements) - lrpad - 6, bh, 1, 1);
+			// }
 			// x of at the end of current element
 			tx += TEXTW(status_elements) - lrpad;
         }
 		free(name_to_free);
+		timer++;
 	}
 
 	resizebarwin(m);
@@ -2017,6 +2027,10 @@ setup(void)
 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
 	for (i = 0; i < LENGTH(colors); i++)
 		scheme[i] = drw_scm_create(drw, colors[i], 3);
+	// init colors for statusbar
+	rgb_scheme = ecalloc(LENGTH(rgb_colors), sizeof(Clr *));
+	for (i = 0; i < LENGTH(rgb_colors); i++)
+		rgb_scheme[i] = drw_scm_create(drw, rgb_colors[i], 3);
 	/* init system tray */
 	updatesystray();
 	/* init bars */
@@ -2690,7 +2704,7 @@ updatesystray(void)
 	/* redraw background */
 	XSetForeground(dpy, drw->gc, scheme[SchemeNorm][ColBg].pixel);
 	XFillRectangle(dpy, systray->win, drw->gc, 0, 0, w, bh);
-+	XSync(dpy, False);
+	XSync(dpy, False);
 }
 
 void

@@ -27,8 +27,12 @@ static const char col_cyan[]        = "#005577";
 static const char col_nord_white[]	= "#ECEFF4";
 static const char col_nord_gray[]	= "#2E3440";
 static const char col_nord_red[]	= "#BF616A";
-static const char col_nord_green[]	= "#8FBCBB";
+static const char col_nord_orange[]	= "#d08770";
+static const char col_nord_yellow[]	= "#ebcb8b";
+static const char col_nord_green[]	= "#a3be8c";  // prev 8FBCBB
 static const char col_nord_blue[]	= "#5e81ac";
+static const char col_nord_lblue[]	= "#81a1c1";
+static const char col_nord_purple[]	= "#b48ead";
 static const char *colors[][3]      = {
 	/*               		fg     		bg         border */
 //	[SchemeNorm]      = { col_gray3, col_gray1, col_gray2 },
@@ -40,7 +44,16 @@ static const char *colors[][3]      = {
 	[SchemeTagText]   = { col_nord_green, "#4E5460", col_cyan },
 	[SchemeTagUline]  = { col_nord_gray, col_nord_green, col_cyan },
 	[SchemeCliUline]  = { col_nord_gray, col_nord_blue, col_cyan },
-	[SchemeStatUline] = { col_nord_gray, col_nord_red, col_cyan }
+	[SchemeStatus] 	  = { col_nord_gray, col_nord_red, col_cyan }
+};
+
+static const char *rgb_colors[][3]      = {
+	{ col_nord_gray, col_nord_red, col_gray2 },
+	{ col_nord_gray, col_nord_orange, col_gray2 },
+	{ col_nord_gray, col_nord_yellow, col_gray2 },
+	{ col_nord_gray, col_nord_green, col_gray2 },
+	{ col_nord_gray, col_nord_lblue, col_gray2 },
+	{ col_nord_gray, col_nord_purple, col_gray2 },
 };
 
 /* tagging */
@@ -56,8 +69,8 @@ static const Rule rules[] = {
 	{ "Gimp",     		NULL,       NULL,       1 << 2,       1,           -1 },
 	{ "Firefox",  		NULL,       NULL,       1 << 0,       0,           -1 },
 	{ "Brave-browser",	NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "Opera",		NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "subl",  		NULL, 	    NULL,       1 << 1,       0,           -1 },
+	{ "Opera",			NULL,       NULL,       1 << 0,       0,           -1 },
+	{ "subl",  			NULL, 	    NULL,       1 << 1,       0,           -1 },
 };
 
 /* layout(s) */
@@ -102,7 +115,7 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      					spawn,          {.v = dmenucmd } },
 	{ MODKEY|ControlMask,           XK_Escape,      		    spawn,          {.v = roficmd } },
-	{ MODKEY,             			    XK_Return, 				spawn,          {.v = termcmd } },
+	{ MODKEY,             			XK_Return, 					spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_e,      					spawn,          {.v = fmcmd } },
 	{ MODKEY,                       XK_b,      					spawn,          {.v = browsercmd } },
 	{ MODKEY|ShiftMask,             XK_b,      					togglebar,      {0} },
@@ -114,12 +127,12 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Right,  					setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_Return, 					zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    					view,           {0} },
-	{ MODKEY,             			    XK_x,      					killclient,     {0} },
+	{ MODKEY,						XK_x,      					killclient,     {0} },
 	// { MODKEY,                       XK_t,      					setlayout,      {.v = &layouts[0]} },
 	// { MODKEY,                       XK_f,      					setlayout,      {.v = &layouts[1]} },
 	// { MODKEY,                       XK_m,      					setlayout,      {.v = &layouts[2]} },
 	// { MODKEY,                       XK_space,  					setlayout,      {0} },
-	{ MODKEY,             			    XK_f,  						  togglefloating, {0} },
+	{ MODKEY,             			XK_f,  						togglefloating, {0} },
 	{ MODKEY,                       XK_0,      					view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      					tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  					focusmon,       {.i = -1 } },
@@ -139,23 +152,24 @@ static Key keys[] = {
   // Media Keys
 	{ 0,                       		  XF86XK_AudioRaiseVolume,	spawn,          SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)") },
 	{ 0,                       		  XF86XK_AudioLowerVolume,	spawn,          SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)") },
-	{ 0,                       		  XF86XK_AudioMute,			    spawn,          SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
-	{ 0,                       		  XF86XK_AudioPlay,      		spawn,          SHCMD("playerctl play-pause") },
-	{ 0,                       		  XF86XK_AudioStop,      		spawn,          SHCMD("playerctl stop") },
-	{ 0,                       		  XF86XK_AudioPrev,      		spawn,          SHCMD("playerctl next") },
-	{ 0,                       		  XF86XK_AudioNext,      		spawn,          SHCMD("playerctl previous") },
+	{ 0,                       		  XF86XK_AudioMute,			spawn,          SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
+	{ 0,                       		  XF86XK_AudioPlay,      	spawn,          SHCMD("playerctl play-pause") },
+	{ 0,                       		  XF86XK_AudioStop,      	spawn,          SHCMD("playerctl stop") },
+	{ 0,                       		  XF86XK_AudioPrev,      	spawn,          SHCMD("playerctl next") },
+	{ 0,                       		  XF86XK_AudioNext,      	spawn,          SHCMD("playerctl previous") },
 	// Print Screen Button:
-	{ 0,							              XK_Print,					        spawn,			    SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
-	{ ShiftMask,					          XK_Print,					        spawn,			    SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
+	{ 0,							  XK_Print,					spawn,			SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
+	{ ShiftMask,					  XK_Print,					spawn,			SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
   // Lockscreen on command 
-	{ MODKEY,                       XK_l,      					      spawn,          SHCMD("light-locker-command -l") },
+	{ MODKEY,                         XK_l,      			    spawn,          SHCMD("light-locker-command -l") },
 };
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
-	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+    { ClkLtSymbol,          0,              Button1,        setlayout,      {.v = &layouts[0]} },
+	{ ClkLtSymbol,          0,              Button2,        setlayout,      {.v = &layouts[1]} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button1,        togglewin,      {0} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
