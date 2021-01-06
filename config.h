@@ -164,7 +164,7 @@ static Key keys[] = {
     { 0,                              XK_Print,                 spawn,          SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
     { ShiftMask,                      XK_Print,                 spawn,          SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
   // Lockscreen on command 
-    { MODKEY,                         XK_l,                     spawn,          SHCMD("light-locker-command -l") },
+    { MODKEY,                         XK_l,                     spawn,          SHCMD("dm-tool lock") },
 };
 
 /* button definitions */
