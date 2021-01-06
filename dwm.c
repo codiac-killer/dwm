@@ -871,18 +871,9 @@ drawbar(Monitor *m)
 		name = name_to_free;
 		// Iterate thorugh the list of elements and print the status bar
 		while ((status_elements = strsep(&name, ";")))	{
-			// Draw background
-			// drw_setscheme(drw, scheme[SchemeNorm]);
-			// drw_rect(drw, m->ww - sw + tx - stw, 0, TEXTW(status_elements) - lrpad, bh, 1, 1);
-			// Draw text
-			// drw_setscheme(drw, scheme[i++%2 ? SchemeNorm : SchemeStatus]);
+			// Draw text block
 			drw_setscheme(drw, rgb_scheme[i++%num_rgb_colors]);
 			drw_text(drw, m->ww - sw + tx - stw, 0, TEXTW(status_elements) - lrpad, bh, 0, status_elements, 0);
-			// Underline
-			// if(i++%2) {
-			//	drw_setscheme(drw, scheme[SchemeStatUline]);
-			//	drw_rect(drw, m->ww - sw + tx - stw+3, bh-uline_thickness, TEXTW(status_elements) - lrpad - 6, bh, 1, 1);
-			// }
 			// x of at the end of current element
 			tx += TEXTW(status_elements) - lrpad;
         }
