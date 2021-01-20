@@ -164,7 +164,7 @@ static Key keys[] = {
     { MODKEY,                         XK_F7,                    spawn,          SHCMD("mpc toggle") },
     { MODKEY,                         XK_F8,                    spawn,          SHCMD("mpc stop") },
     { MODKEY,                         XK_F6,                    spawn,          SHCMD("mpc next") },
-    { MODKEY,                         XK_F5,                    spawn,          SHCMD("mpc previous") },
+    { MODKEY,                         XK_F5,                    spawn,          SHCMD("mpc prev") },
     // Print Screen Button:
     { 0,                              XK_Print,                 spawn,          SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
     { ShiftMask,                      XK_Print,                 spawn,          SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
