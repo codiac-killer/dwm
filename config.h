@@ -152,7 +152,7 @@ static Key keys[] = {
     TAGKEYS(                        XK_8,                       7)
     TAGKEYS(                        XK_9,                       8)
     { MODKEY|ShiftMask,             XK_q,                       quit,           {0} },
-  // Media Keys
+    // Media Keys
     { 0,                              XF86XK_AudioRaiseVolume,  spawn,          SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)") },
     { 0,                              XF86XK_AudioLowerVolume,  spawn,          SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)") },
     { 0,                              XF86XK_AudioMute,         spawn,          SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
@@ -160,6 +160,11 @@ static Key keys[] = {
     { 0,                              XF86XK_AudioStop,         spawn,          SHCMD("playerctl stop") },
     { 0,                              XF86XK_AudioPrev,         spawn,          SHCMD("playerctl next") },
     { 0,                              XF86XK_AudioNext,         spawn,          SHCMD("playerctl previous") },
+    // MPC keys
+    { MODKEY,                         XK_F7,                    spawn,          SHCMD("mpc toggle") },
+    { MODKEY,                         XK_F8,                    spawn,          SHCMD("mpc stop") },
+    { MODKEY,                         XK_F6,                    spawn,          SHCMD("mpc next") },
+    { MODKEY,                         XK_F5,                    spawn,          SHCMD("mpc previous") },
     // Print Screen Button:
     { 0,                              XK_Print,                 spawn,          SHCMD("sleep 0.1 && /usr/bin/maim -B --select -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i")},
     { ShiftMask,                      XK_Print,                 spawn,          SHCMD("sleep 0.1 && /usr/bin/maim -B --select ~/Pictures/screenshots/$(date +%F_%H-%M-%S).png")},
