@@ -42,23 +42,22 @@ static const char *colors[][3]      = {
     [SchemeSel]       = { col_nord_white, "#4E5460", col_cyan },
     [SchemeHid]       = { col_nord_blue, col_nord_gray, col_nord_blue },
     [SchemeTagText]   = { col_nord_green, "#4E5460", col_cyan },
-    [SchemeTagUline]  = { col_nord_gray, col_nord_green, col_cyan },
-    [SchemeCliUline]  = { col_nord_gray, col_nord_blue, col_cyan },
+    [SchemeTagUline]  = { col_nord_white, col_nord_green, col_cyan },
+    [SchemeCliUline]  = { col_nord_white, col_nord_blue, col_cyan },
     [SchemeStatus]    = { col_nord_gray, col_nord_red, col_cyan }
 };
 
 static const char *rgb_colors[][3]      = {
-    { col_nord_gray, col_nord_red, col_gray2 },
-    { col_nord_gray, col_nord_orange, col_gray2 },
-    { col_nord_gray, col_nord_yellow, col_gray2 },
-    { col_nord_gray, col_nord_green, col_gray2 },
-    { col_nord_gray, col_nord_lblue, col_gray2 },
-    { col_nord_gray, col_nord_purple, col_gray2 },
+    { col_nord_red, col_nord_gray, col_gray2 },
+    { col_nord_orange, col_nord_gray, col_gray2 },
+    { col_nord_yellow, col_nord_gray, col_gray2 },
+    { col_nord_green, col_nord_gray, col_gray2 },
+    { col_nord_lblue, col_nord_gray, col_gray2 },
+    { col_nord_purple, col_nord_gray, col_gray2 },
 };
 
 /* tagging */
 static const char *tags[] = { "Web", "Code", "Media", "Desktops", "System" };
-// static const char *tags[] = { "🌍", "📜", "⏯️", "📦", "⚙" };
 
 static const Rule rules[] = {
     /* xprop(1):
@@ -101,7 +100,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[]           = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nord_gray, "-nf", col_nord_white, "-sb", col_nord_green, "-sf", col_nord_gray, NULL };
+static const char *dmenucmd[]           = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nord_gray, "-nf", col_nord_white, "-sb", col_nord_green, "-sf", col_nord_gray, "-c", "-l", "10", NULL };
 static const char *roficmd[]            = { "rofi", "-show", "drun", "-modi", "drun", "-theme", "oneDark", NULL };
 static const char *termcmd[]            = { "alacritty", NULL };
 static const char *fmcmd[]              = { "exo-open", "--launch", "FileManager", NULL };

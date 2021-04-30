@@ -878,6 +878,7 @@ drawbar(Monitor *m)
 			tx += TEXTW(status_elements) - lrpad;
         }
 		free(name_to_free);
+    free(hidden_characters);
 		timer++;
 	}
 
