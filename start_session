@@ -20,5 +20,6 @@ run thunar --daemon
 run pa-applet
 # run pamac-tray
 run dwmblocks
+run xrdb ~/.Xdefaults
 
 dwm >> ~/.config/dwm/dwm.log
