@@ -68,11 +68,8 @@ static const Rule rules[] = {
     { "Gimp",           NULL,       NULL,       1 << 2,       1,           -1 },
     { "firefox",        NULL,       NULL,       1 << 0,       0,           -1 },
     { "Brave-browser",  NULL,       NULL,       1 << 0,       0,           -1 },
-    { "discord",        NULL,       NULL,       1 << 2,       0,           -1 },
     { "Steam",          NULL,       NULL,       1 << 2,       0,           -1 },
     { "Lutris",         NULL,       NULL,       1 << 2,       0,           -1 },
-    { "Opera",          NULL,       NULL,       1 << 0,       0,           -1 },
-    { "subl",           NULL,       NULL,       1 << 1,       0,           -1 },
 };
 
 /* layout(s) */
@@ -102,9 +99,9 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]           = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nord_gray, "-nf", col_nord_white, "-sb", col_nord_green, "-sf", col_nord_gray, "-c", "-l", "10", NULL };
 static const char *roficmd[]            = { "rofi", "-show", "drun", "-modi", "drun", "-theme", "oneDark", NULL };
-static const char *termcmd[]            = { "st", NULL };
-static const char *fmcmd[]              = { "exo-open", "--launch", "FileManager", NULL };
-static const char *browsercmd[]         = { "exo-open", "--launch", "WebBrowser", NULL};
+static const char *termcmd[]            = { "st", "zsh", NULL };
+static const char *fmcmd[]              = { "st", "ranger", NULL };
+static const char *browsercmd[]         = { "qutebrowser", NULL};
 // static const char *raise_volumecmd[]     = { "amixer", "-D", "pulse", "sset", "Master", "5%+;", "kill", "-44", "$(pidof", "dwmblocks)", NULL };
 // static const char *lower_volumecmd[]     = { "amixer", "-D", "pulse", "sset", "Master", "5%-;", "kill", "-44", "$(pidof", "dwmblocks)", NULL };
 // static const char *mute_volumecmd[]      = { "amixer", "-D", "pulse", "sset", "Master", "toggle;", "kill", "-44", "$(pidof", "dwmblocks)", NULL };
