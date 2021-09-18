@@ -6,16 +6,16 @@ function run {
    fi
 }
 
-run nitrogen --restore
-run xwallpaper --zoom /home/mean/.config/BetterThanYour/wallpapers/skyrine.jpg
+run xwallpaper --zoom /home/mean/.config/BetterThanYour/wallpapers/austronaut-dark.jpg
 run picom --config  ~/.config/picom.conf -b --experimental-backends
 run setxkbmap -layout "us,gr" -option "grp:win_space_toggle"
 run lxqt-policykit-agent
 run dunst
-run xautolock -time 5 -locker "dm-tool lock"
+run /opt/lights-on/lightsOn.sh
+# run xautolock -time 5 -locker "dm-tool lock"
 # run xautolock -detectsleep -time 10 -locker "~/.config/awesome/lockscreen"
-run xcape -e 'Super_L=Super_L|Control_L|Escape'
+run xcape -e 'Super_L=Super_L|P'
 run dwmblocks
-run xrdb ~/.Xdefaults
+run xrdb ~/.config/space-vim-dark/terminal/space-vim-dark.xresources
 
 dwm >> ~/.config/dwm/dwm.log
