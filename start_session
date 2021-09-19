@@ -12,8 +12,7 @@ run setxkbmap -layout "us,gr" -option "grp:win_space_toggle"
 run lxqt-policykit-agent
 run dunst
 run /opt/lights-on/lightsOn.sh
-# run xautolock -time 5 -locker "dm-tool lock"
-# run xautolock -detectsleep -time 10 -locker "~/.config/awesome/lockscreen"
+run xautolock -detectsleep -time 10 -locker "slock"
 run xcape -e 'Super_L=Super_L|P'
 run dwmblocks
 run xrdb ~/.config/space-vim-dark/terminal/space-vim-dark.xresources
