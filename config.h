@@ -38,22 +38,22 @@ static const char *colors[][3]      = {
 //  [SchemeNorm]      = { col_gray3, col_gray1, col_gray2 },
 //  [SchemeSel]       = { col_gray4, col_cyan,  col_cyan  },
 //  [SchemeHid]       = { col_cyan,  col_gray1, col_cyan  },
-    [SchemeNorm]      = { col_nord_white, col_nord_gray, col_gray2 },
-    [SchemeSel]       = { col_nord_white, "#4E5460", col_cyan },
-    [SchemeHid]       = { col_nord_blue, col_nord_gray, col_nord_blue },
-    [SchemeTagText]   = { col_nord_green, "#4E5460", col_cyan },
+    [SchemeNorm]      = { col_nord_white, col_gray1, col_gray2 },
+    [SchemeSel]       = { col_nord_white, col_gray2, col_cyan },
+    [SchemeHid]       = { col_nord_blue, col_gray1, col_nord_blue },
+    [SchemeTagText]   = { col_nord_green, col_gray2, col_cyan },
     [SchemeTagUline]  = { col_nord_white, col_nord_green, col_cyan },
     [SchemeCliUline]  = { col_nord_white, col_nord_blue, col_cyan },
-    [SchemeStatus]    = { col_nord_gray, col_nord_red, col_cyan }
+    [SchemeStatus]    = { col_gray1, col_nord_red, col_cyan }
 };
 
 static const char *rgb_colors[][3]      = {
-    { col_nord_red, col_nord_gray, col_gray2 },
-    { col_nord_orange, col_nord_gray, col_gray2 },
-    { col_nord_yellow, col_nord_gray, col_gray2 },
-    { col_nord_green, col_nord_gray, col_gray2 },
-    { col_nord_lblue, col_nord_gray, col_gray2 },
-    { col_nord_purple, col_nord_gray, col_gray2 },
+    { col_nord_red, col_gray1, col_gray2 },
+    { col_nord_orange, col_gray1, col_gray2 },
+    { col_nord_yellow, col_gray1, col_gray2 },
+    { col_nord_green, col_gray1, col_gray2 },
+    { col_nord_lblue, col_gray1, col_gray2 },
+    { col_nord_purple, col_gray1, col_gray2 },
 };
 
 /* tagging */
