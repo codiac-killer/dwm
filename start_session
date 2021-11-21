@@ -1,6 +1,6 @@
-#! /usr/bin/bash
+#! /usr/bin/sh
 
-function run {
+run () {
    if (command -v $1 && ! pgrep $1); then
      $@&
    fi
